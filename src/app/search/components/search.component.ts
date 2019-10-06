@@ -13,9 +13,10 @@ import { MatTable } from '@angular/material/table';
 export class SearchComponent implements OnInit {
   displayedColumns: string[] = ['type', 'name', 'personId/vat'];
 
-  inputValue = '';
   isFetching = false;
+  fetched = false;
   customers = [];
+  searchInput = '';
 
   @ViewChild(MatTable, {static: true}) table: MatTable<any>;
 
@@ -29,7 +30,6 @@ export class SearchComponent implements OnInit {
   }
 
   onKey(event: any) {
-    this.inputValue = event.target.value;
     if (event.key === 'Enter') {
       this.executeSearch();
     }
@@ -50,7 +50,7 @@ export class SearchComponent implements OnInit {
     const hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
     hiddenElement.target = '_blank';
-    hiddenElement.download = `${this.inputValue}-${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}.csv`;
+    hiddenElement.download = `${this.searchInput}-${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}.csv`;
     hiddenElement.click();
   }
 
@@ -63,10 +63,11 @@ export class SearchComponent implements OnInit {
   executeSearch(services = ['merchantService', 'usersService']) {
     if (!this.isFetching) {
       this.isFetching = true;
+      this.fetched = false;
       this.customers = [];
       services.forEach((service, index) => {
         this[service]
-          .search$(this.inputValue)
+          .search$(this.searchInput)
           .subscribe(
             data => {
               data.forEach(customer => this.customers.push(customer));
@@ -76,10 +77,11 @@ export class SearchComponent implements OnInit {
             },
             error => this.openNotification(error),
             () => {
+              this.isFetching = false;
+              this.fetched = true;
               if (index >= services.length - 1) {
                 this.customers = this.customers.sort((a, b) =>
                   (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-                this.isFetching = false;
                 this.table.renderRows();
               }
             }
@@ -89,7 +91,8 @@ export class SearchComponent implements OnInit {
   }
 
   clearSearch() {
+    this.searchInput = '';
     this.customers = [];
-    this.inputValue = '';
+    this.fetched = false;
   }
 }

@@ -6,6 +6,7 @@
        (keyup)="onKey($event)"
        matInput
        placeholder="Enter your search value..."
+       [(ngModel)]="searchInput"
     >
   </mat-form-field>
   <div>
@@ -42,4 +43,5 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+  <p *ngIf="!isFetching && fetched && customers.length === 0">No results for given query or errors have occurred</p>
 </div>
