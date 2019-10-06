@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { of, throwError, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap, map, delay } from 'rxjs/operators';
+import { tap, map, delay, debounceTime } from 'rxjs/operators';
 
 export interface UserInfo {
   id: string;

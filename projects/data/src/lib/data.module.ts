@@ -23,7 +23,8 @@ export class DataModule {
         UserRepository,
         { provide: APP_INITIALIZER,
           useFactory: loadMerchants,
-          deps: [MerchantRepository], multi: true
+          deps: [MerchantRepository],
+          multi: true
         },
         {
           provide: APP_INITIALIZER,

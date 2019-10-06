@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { SearchModule } from './search/search.module';
 import { ServicesModule } from './services/services.module';
 import { DataModule } from '@search-app/data';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -18,9 +19,10 @@ import { DataModule } from '@search-app/data';
     AppRoutingModule,
     SearchModule,
     ServicesModule.forRoot(),
-    DataModule.forRoot()
+    DataModule.forRoot(),
+    BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [ServicesModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

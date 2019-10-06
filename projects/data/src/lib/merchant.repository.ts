@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of, throwError, Observable } from 'rxjs';
-import { tap, map, delay } from 'rxjs/operators';
+import { tap, map, delay, debounceTime } from 'rxjs/operators';
 
 export interface MerchantInfo {
   id: string;
@@ -46,6 +46,7 @@ export class MerchantRepository {
   load$(): Promise<boolean> {
     return this.client.get<MerchantInfo[]>('assets/merchants.json').pipe(
       tap(m => this.list = m),
+      tap(m => console.log('Merchants loaded')),
       map(() => true)
     )
     .toPromise();

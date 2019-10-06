@@ -1,36 +1,45 @@
 <!-- This is just a placeholder. Feel free to do here whatever you would like to. -->
-<h1>Search for customers:</h1>
-<div>
-  <input type="text">
-  <input type="submit" value="Search" (click)="executeSearch()">
-  <input type="submit" value="Clear" (click)="clearSearch()">
-</div>
-<div *ngIf="hasResults">
-  <ul>
-    <li>
-      😎 Arnie Wightweiß
-    </li>
-    <li>
-      🏭 OBM 879665465464
-    </li>
-    <li>
-      😎 Jackie Chen
-    </li>
-    <li>
-      😎 Dolphicco Lundgerinio
-    </li>
-    <li>
-      🏭 Fuhitsu 894844410
-    </li>
-    <li>
-      😎 Jason Statbeef
-    </li>
-    <li>
-      😎 Sylvester Horse
-    </li>
-    <li>
-      🏭 Qompaq 84666884118
-    </li>
-  </ul>
-  <button>Save</button>
+<h1>Search for customers: </h1>
+<mat-card>
+  <mat-form-field>
+    <input type="text"
+       (keyup)="onKey($event)"
+       matInput
+       placeholder="Enter your search value..."
+    >
+  </mat-form-field>
+  <div>
+    <button [disabled]="isFetching" type="submit" (click)="executeSearch()" color="primary" mat-flat-button>Search</button>
+    <button [disabled]="isFetching" type="submit" (click)="clearSearch()" mat-flat-button>Clear</button>
+    <button *ngIf="!isFetching && customers.length > 0" (click)="onClick()" mat-flat-button color="primary">Save</button>
+  </div>
+</mat-card>
+<div class="results-container">
+  <mat-progress-spinner
+    mode="indeterminate"
+    *ngIf="isFetching"
+  >
+  </mat-progress-spinner>
+  <table mat-table [dataSource]="customers" class="mat-elevation-z3 {{isFetching || customers.length === 0 ? 'hidden': ''}}">
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon *ngIf="element.personId" aria-hidden="false" aria-label="Business Customer">face</mat-icon>
+        <mat-icon *ngIf="element.vat" aria-hidden="false" aria-label="Private Customer">business</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="personId/vat">
+      <th mat-header-cell *matHeaderCellDef> Person ID / VAT No. </th>
+      <td mat-cell *matCellDef="let element"> {{element.personId || element.vat}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>
